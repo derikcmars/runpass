@@ -1,0 +1,51 @@
+{
+  "project": "runpass",
+  "currentSprint": 2,
+  "status": "in_progress",
+  "history": [
+    {
+      "sprint": 1,
+      "name": "Estrutura do Wizard + Navegação entre Etapas",
+      "status": "completed",
+      "completedAt": "2025-07-16",
+      "acceptedCriteria": [
+        "AC1",
+        "AC2",
+        "AC3",
+        "AC4",
+        "AC5",
+        "AC6",
+        "AC7",
+        "AC8",
+        "AC9",
+        "AC10",
+        "AC11",
+        "AC12"
+      ]
+    },
+    {
+      "sprint": 2,
+      "name": "Step1BasicInfo - Informações Básicas do Evento",
+      "status": "in_progress",
+      "completedAt": null,
+      "completedCriteria": [
+        "Formulário com campos: Nome, URL, Data, Horário, Local, Banner, Descrição",
+        "Sanitização automática da URL (slug)",
+        "Validação individual por campo com blur",
+        "Validação completa na navegação",
+        "Upload de banner com preview e validação de formato/tamanho",
+        "Indicador visual de campos obrigatórios (*)",
+        "Botão Salvar Rascunho com estado de loading e indicador de alterações não salvas",
+        "Botão Próximo com validação e loading",
+        "Navegação funcional entre Etapa 1 → Etapa 2",
+        "Exibição da data no formato brasileiro (DD/MM/AAAA)",
+        "Exibição do horário selecionado como confirmação",
+        "Correção da função isStepValid() que estava quebrada"
+      ],
+      "pendingCriteria": [
+        "Persistência real do rascunho (substituir alert/console.log por chamada API)",
+        "Mensagens de erro mais específicas para cada campo"
+      ]
+    }
+  ]
+}

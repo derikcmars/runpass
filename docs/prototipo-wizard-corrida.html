@@ -1,11 +1,191 @@
-﻿.step.completed .step-num { background: #059669; }
-* { margin: 0; padding: 0; box-sizing: border-box; }
-<!DOCTYPE html>
-<html lang="pt-BR">
+﻿<!DOCTYPE html>
+<html lang="pt">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-.header { background: linear-gradient(135deg, #1e40af, #3b82f6); color: #fff; padding: 1.5rem 2rem; }
-<meta charset="UTF-8" />
-.modal-overlay.show { display: flex; }
-.step.active { color: #1e40af; border-bottom-color: #1e40af; background: #fff; }
-<title>Runpass — Wizard de Cadastro de Corrida (Protótipo)</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Runpass — Cadastro de Corrida</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: system-ui, sans-serif; background: #f5f5f5; color: #333; padding: 2rem; }
+  .container { max-width: 800px; margin: 0 auto; }
+  h1 { margin-bottom: 1.5rem; }
+  .steps { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .steps span { padding: 0.4rem 0.8rem; border-radius: 20px; background: #ddd; font-size: 0.85rem; }
+  .steps span.active { background: #0066cc; color: white; font-weight: bold; }
+  .card { background: white; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .card h2 { margin-bottom: 1rem; font-size: 1.1rem; }
+  label { display: block; margin-bottom: 0.3rem; font-weight: 500; }
+  input, textarea, select { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1rem; font-size: 0.95rem; }
+  .row { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .row > * { flex: 1; min-width: 180px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+  th, td { padding: 0.5rem; text-align: left; border-bottom: 1px solid #eee; }
+  th { font-weight: 600; background: #fafafa; }
+  button { padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; }
+  .btn-primary { background: #0066cc; color: white; }
+  .btn-outline { background: white; border: 1px solid #ccc; }
+  .btn-danger { background: white; border: 1px solid #cc0000; color: #cc0000; }
+  .btn-group { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; }
+  .url-box { display: flex; align-items: center; background: #fafafa; border: 1px solid #ccc; border-radius: 4px; }
+  .url-box span { padding: 0.5rem; color: #666; background: #eee; border-right: 1px solid #ccc; }
+  .url-box input { border: none; margin: 0; flex: 1; }
+  .radio-group { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+  .radio-group label { display: flex; align-items: center; gap: 0.4rem; font-weight: normal; }
+  .alert { padding: 0.7rem 1rem; border-radius: 4px; margin: 1rem 0; font-size: 0.9rem; }
+  .alert-warning { background: #fff3cd; border: 1px solid #ffc107; color: #856404; }
+  .alert-info { background: #d1ecf1; border: 1px solid #17a2b8; color: #0c5460; }
+  .tab { display: none; }
+  .tab.active { display: block; }
+  .tabs-nav { display: flex; gap: 0; margin-bottom: 1.5rem; }
+  .tabs-nav button { padding: 0.6rem 1.2rem; border: 1px solid #ccc; background: #eee; cursor: pointer; }
+  .tabs-nav button.active { background: #0066cc; color: white; border-color: #0066cc; }
+  .checkbox-group { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.3rem; }
+  .checkbox-group input { width: auto; margin: 0; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🏃 Runpass — Nova Corrida</h1>
+
+  <div class="steps">
+    <span class="active">1. Básico</span>
+    <span>2. Percursos</span>
+    <span>3. Lotes</span>
+    <span>4. Kits</span>
+    <span>5. Inscrição</span>
+    <span>6. Docs</span>
+    <span>7. Comunicação</span>
+    <span>8. Revisão</span>
+  </div>
+
+  <div class="tabs-nav">
+    <button class="active" onclick="mostrarTela(0)">Etapa 1 — Básico</button>
+    <button onclick="mostrarTela(1)">Etapa 2 — Percursos</button>
+    <button onclick="mostrarTela(2)">Etapa 3 — Lotes</button>
+  </div>
+
+  <!-- TELA 1 -->
+  <div class="tab active" id="tela0">
+    <div class="card">
+      <h2>1 — Informações Básicas</h2>
+      <label>Nome da Corrida</label>
+      <input type="text" id="nomeCorrida" placeholder="Ex.: Meia Maratona Ibirapuera 2026" oninput="gerarSlug()">
+      <label>Personalize sua URL</label>
+      <div class="url-box">
+        <span>runpass.com.br/</span>
+        <input type="text" id="slugUrl" placeholder="meia-maratona-ibirapuera-2026">
+      </div>
+      <div class="row">
+        <div><label>Data do Evento</label><input type="date"></div>
+        <div><label>Horário de Largada</label><input type="time"></div>
+      </div>
+      <label>Local</label>
+      <input type="text" placeholder="Ex.: Parque Ibirapuera, São Paulo-SP">
+      <label>Banner</label>
+      <input type="file">
+      <label>Descrição</label>
+      <textarea rows="4" placeholder="Descreva o evento..."></textarea>
+    </div>
+    <div class="btn-group">
+      <button class="btn-outline">Salvar rascunho</button>
+      <button class="btn-primary" onclick="mostrarTela(1)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- TELA 2 -->
+  <div class="tab" id="tela1">
+    <div class="card">
+      <h2>2 — Percursos e Distâncias</h2>
+      <p style="color:#666; margin-bottom:1rem;">Adicione percursos, defina numeração de peito e categorias especiais.</p>
+      <table id="tabelaPercursos">
+        <thead><tr><th>Percurso</th><th>Largada</th><th>Tipo</th><th>Nº Peito</th><th>Categorias</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <button class="btn-outline" onclick="adicionarPercurso()">+ Adicionar percurso</button>
+      <div class="alert alert-info">💡 As faixas de numeração de peito não podem se sobrepor.</div>
+    </div>
+    <div class="btn-group">
+      <button class="btn-outline" onclick="mostrarTela(0)">← Voltar</button>
+      <button class="btn-primary" onclick="mostrarTela(2)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- TELA 3 -->
+  <div class="tab" id="tela2">
+    <div class="card">
+      <h2>3.1 — Vagas Máximas por Percurso</h2>
+      <div class="row">
+        <div><label>21 km</label><input type="number" value="500"></div>
+        <div><label>10 km</label><input type="number" value="500"></div>
+        <div><label>5 km</label><input type="number" value="200"></div>
+      </div>
+      <p style="color:#666;">Total de vagas no evento: <strong>1200</strong></p>
+    </div>
+    <div class="card">
+      <h2>3.2 — Como os Lotes Vão Trocar?</h2>
+      <div class="radio-group">
+        <label><input type="radio" name="modoLote" onchange="atualizarModoLote()" checked> Por intervalo de datas</label>
+        <label><input type="radio" name="modoLote" onchange="atualizarModoLote()"> Por esgotamento de vagas</label>
+        <label><input type="radio" name="modoLote" onchange="atualizarModoLote()"> Combinado (o que ocorrer primeiro)</label>
+      </div>
+      <div id="camposData"><div class="row"><div><label>Abertura</label><input type="date" value="2025-09-01"></div><div><label>Encerramento</label><input type="date" value="2025-11-15"></div></div></div>
+      <div id="camposEsgotamento" style="display:none;"><p style="color:#666;">Os lotes viram automaticamente quando as vagas esgotarem.</p></div>
+      <div id="camposCombinado" style="display:none;"><p style="color:#666;">O lote vira quando a data limite chegar <strong>ou</strong> as vagas esgotarem.</p></div>
+    </div>
+    <div class="card">
+      <h2>3.3 — Configuração de Lotes</h2>
+      <table id="tabelaLotes">
+        <thead><tr><th>Lote</th><th>Período</th><th>21 km (R$)</th><th>10 km (R$)</th><th>5 km (R$)</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <button class="btn-outline" onclick="adicionarLote()">+ Adicionar lote</button>
+      <div class="alert alert-warning">⚠️ A soma das vagas de cada percurso entre todos os lotes não pode ultrapassar o limite definido em 3.1.</div>
+    </div>
+    <div class="btn-group">
+      <button class="btn-outline" onclick="mostrarTela(1)">← Voltar</button>
+      <button class="btn-primary">Próximo →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function mostrarTela(n) {
+    document.querySelectorAll('.tab').forEach((el, i) => el.classList.toggle('active', i === n));
+    document.querySelectorAll('.tabs-nav button').forEach((el, i) => el.classList.toggle('active', i === n));
+  }
+  function gerarSlug() {
+    const nome = document.getElementById('nomeCorrida').value;
+    let slug = nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+    document.getElementById('slugUrl').value = slug;
+  }
+  function adicionarPercurso() {
+    const tbody = document.querySelector('#tabelaPercursos tbody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><input type="text" placeholder="Nome do percurso" style="margin:0;"></td>
+      <td><input type="time" value="06:00" style="margin:0;"></td>
+      <td><select style="margin:0;"><option>asfalto</option><option>trilha</option><option>caminhada</option></select></td>
+      <td><input type="number" placeholder="Início" style="width:80px; margin:0;"></td>
+      <td><div class="checkbox-group"><input type="checkbox" checked> Padrão</div><div class="checkbox-group"><input type="checkbox"> PCD (50% desc)</div><div class="checkbox-group"><input type="checkbox"> +60 anos (50% desc)</div></td>
+      <td><button class="btn-danger" onclick="this.closest('tr').remove()">🗑</button></td>`;
+    tbody.appendChild(tr);
+  }
+  function adicionarLote() {
+    const tbody = document.querySelector('#tabelaLotes tbody');
+    const num = tbody.children.length + 1;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>Lote ${num}</td><td>—</td>
+      <td><input type="number" value="0" style="width:80px; margin:0;"></td>
+      <td><input type="number" value="0" style="width:80px; margin:0;"></td>
+      <td><input type="number" value="0" style="width:80px; margin:0;"></td>
+      <td><button class="btn-danger" onclick="this.closest('tr').remove()">🗑</button></td>`;
+    tbody.appendChild(tr);
+  }
+  function atualizarModoLote() {
+    const valor = document.querySelector('input[name="modoLote"]:checked').parentElement.textContent.trim();
+    document.getElementById('camposData').style.display = valor.includes('datas') || valor.includes('Combinado') ? 'block' : 'none';
+    document.getElementById('camposEsgotamento').style.display = valor.includes('esgotamento') && !valor.includes('Combinado') ? 'block' : 'none';
+    document.getElementById('camposCombinado').style.display = valor.includes('Combinado') ? 'block' : 'none';
+  }
+</script>
+</body>
+</html>
